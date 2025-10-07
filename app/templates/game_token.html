@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Game Token{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>Game server token</h2>
+  <p>Generate a short-lived token and paste it in the game: <code>/authtoken &lt;TOKEN&gt;</code></p>
+  <div class="row">
+    <button id="gen-game-token">Generate token</button>
+    <input id="game-token" readonly placeholder="Click Generate token">
+    <button id="copy-token">Copy</button>
+    <small id="game-token-status" style="opacity:.8"></small>
+  </div>
+</div>
+{% endblock %}

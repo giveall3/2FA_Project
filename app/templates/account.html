@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Account{% endblock %}
+{% block content %}
+  <div class="card">
+    <h2>Account</h2>
+
+    {# --- 2FA setup block --- #}
+    {% if pending_2fa %}
+      <div class="mt">
+        <p><strong>Step 2/2:</strong> Scan the QR and confirm with the code from the app to enable 2FA.</p>
+        {% if qr %}<img class="qr" src="{{ qr }}" alt="QR">{% endif %}
+        <form method="post" action="/account/2fa/confirm">
+          <label for="token">Code from app</label>
+          <input id="token" name="token" inputmode="numeric" placeholder="6 digits" required>
+          <button>Confirm 2FA</button>
+        </form>
+      </div>
+    {% else %}
+      {% if user and user.totp_secret %}
+        <p>2FA: <strong>enabled</strong></p>
+        <form method="post" action="/account/2fa/disable"><button>Disable 2FA</button></form>
+        <form method="post" action="/account/2fa/regenerate"><button>Regenerate 2FA secret</button></form>
+      {% else %}
+        <p>2FA: <strong>disabled</strong></p>
+        <form method="post" action="/account/2fa/enable"><button>Enable 2FA</button></form>
+      {% endif %}
+    {% endif %}
+
+    <hr class="mt" style="opacity:.2">
+
+    {# --- Change password --- #}
+    <h3 class="mt">Change password</h3>
+    <form method="post" action="/account/password">
+      <label for="current_password">Current password</label>
+      <input id="current_password" name="current_password" type="password" required>
+      <label for="new_password">New password</label>
+      <input id="new_password" name="new_password" type="password" required minlength="8">
+      <label for="confirm_password">Repeat new password</label>
+      <input id="confirm_password" name="confirm_password" type="password" required minlength="8">
+      <button>Change password</button>
+    </form>
+
+    <hr class="mt" style="opacity:.2">
+
+    {# --- Recovery codes (active + generate) --- #}
+    <h3 class="mt">Recovery codes</h3>
+    <p>Active codes: {{ available }}</p>
+    {% if codes %}
+      <p><strong>Copy and save these codes. We only show them once.</strong></p>
+      <ul>{% for c in codes %}<li><code>{{ c }}</code></li>{% endfor %}</ul>
+    {% endif %}
+    <form method="post" action="/account/recovery-codes">
+      <button>Generate new codes</button>
+    </form>
+
+    {# --- NEW: Recovery code usage history --- #}
+    <h3 class="mt">Recent recovery code usage</h3>
+    {% if audit and audit|length > 0 %}
+      <div class="mt" style="overflow:auto">
+        <table style="width:100%; border-collapse:collapse">
+          <thead>
+            <tr style="text-align:left">
+              <th style="border-bottom:1px solid #3a2f26; padding:6px 4px;">When</th>
+              <th style="border-bottom:1px solid #3a2f26; padding:6px 4px;">IP</th>
+              <th style="border-bottom:1px solid #3a2f26; padding:6px 4px;">User-Agent</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in audit %}
+              <tr>
+                <td style="border-bottom:1px solid #3a2f26; padding:6px 4px;">{{ row['used_at'] }}</td>
+                <td style="border-bottom:1px solid #3a2f26; padding:6px 4px;">{{ row['ip'] or '-' }}</td>
+                <td style="border-bottom:1px solid #3a2f26; padding:6px 4px;"><small>{{ row['user_agent'] or '-' }}</small></td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="mt" style="opacity:.8">No recovery code usage recorded yet.</p>
+    {% endif %}
+  </div>
+{% endblock %}

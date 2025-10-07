@@ -1,0 +1,10 @@
+Flask #framework www
+pyotp # TOTP for 2FA
+qrcode # Makes QR codes
+pillow # backend for saving QR codes
+argon2-cffi # Password Hash
+cryptography # for fernet
+requests # http for API
+PyJWT # coding/deconding JWT
+pytest # tests
+Werkzeug #hashing fallback

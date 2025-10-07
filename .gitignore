@@ -1,0 +1,72 @@
+# --- Python / Flask
+__pycache__/
+*.py[cod]
+*.pyo
+*.so
+*.egg-info/
+*.egg
+.installed.cfg
+
+# Virtualenvs
+.venv/
+venv/
+env/
+
+# Type checkers / linters / tooling
+.mypy_cache/
+.ruff_cache/
+.pytype/
+
+# Tests / coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+
+# Builds / artifacts
+dist/
+build/
+
+# SQLite / data
+instance/
+data/
+app/data/
+*.sqlite
+*.sqlite3
+*.db
+
+# Logs
+*.log
+logs/
+**/logs/
+crash-reports/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.crt
+
+# Docker (keep Dockerfile & docker-compose.yml tracked)
+*.pid
+
+# IDE / OS junk
+.idea/
+.vscode/
+.vs/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Static maps (if any)
+static/**/*.map
+
+# Generated reports (from the audit helper)
+audit_report.md
+audit_report.json
+
+# --- Minecraft server (adjust as you like)
+MCServer/

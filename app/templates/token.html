@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}2FA Verification{% endblock %}
+{% block content %}
+<div class="card">
+  <h2>2FA Verification</h2>
+  <p>Enter the code from your 2FA app <em>or</em> a recovery code.</p>
+  <form method="post">
+    <label for="token">Code</label>
+    <input id="token" name="token" inputmode="numeric" placeholder="6 digits or recovery code" required>
+    <button>Confirm</button>
+  </form>
+</div>
+{% endblock %}

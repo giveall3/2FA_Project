@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Auth Demo{% endblock %}</title>
+  <style>
+    :root{
+      --bg:#1f1b16; --card:#2b241e; --text:#f6e7d8;
+      --accent:#c87941; --accent2:#946846; --muted:#bda48f;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;
+         background:linear-gradient(180deg,var(--bg),#241e18);
+         color:var(--text);}
+    a{color:var(--text)}
+    .container{max-width:960px;margin:0 auto;padding:24px}
+
+    nav{display:flex;gap:12px;align-items:center;padding:12px 24px;background:#241e18;border-bottom:1px solid #3a2f26}
+    nav a, nav .nav-btn{display:inline-flex;align-items:center;justify-content:center;height:36px;padding:8px 12px;border-radius:12px;line-height:1}
+    nav a{text-decoration:none;background:#2f271f}
+    nav a.active{outline:2px solid var(--accent)}
+    nav .spacer{flex:1}
+    nav form.nav-logout{display:inline;margin:0}
+    nav .nav-btn{border:0;background:var(--accent);color:#fff;cursor:pointer; margin-top:0;}
+
+    .card{background:var(--card);border:1px solid #3a2f26;border-radius:18px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+    input,button{font:inherit}
+    input{width:100%;padding:10px 12px;background:#2a231d;border:1px solid #3a2f26;border-radius:12px;color:var(--text)}
+    label{display:block;margin-top:12px;margin-bottom:6px;color:var(--muted)}
+    button{margin-top:14px;padding:10px 14px;border:0;border-radius:12px;background:var(--accent);color:white;cursor:pointer}
+    .row{display:grid;grid-template-columns:1fr;gap:16px}
+    .mt{margin-top:16px}
+    .qr{max-width:220px;border-radius:12px;border:1px solid #3a2f26}
+    .flash{margin:8px 0;padding:10px 12px;border-radius:12px}
+    .flash.error{background:#5a2a2a}
+    .flash.success{background:#2f5a2a}
+    .flash.info{background:#2a3f5a}
+  </style>
+  <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+  <nav>
+    <a href="{{ url_for('account_bp.index') }}" class="{{ 'active' if request.endpoint=='account_bp.index' else '' }}">Home</a>
+
+    {% if not session.get('user_id') %}
+      <a href="{{ url_for('auth_bp.login') }}" class="{{ 'active' if request.endpoint=='auth_bp.login' else '' }}">Login</a>
+      <a href="{{ url_for('auth_bp.register') }}" class="{{ 'active' if request.endpoint=='auth_bp.register' else '' }}">Register</a>
+    {% endif %}
+
+    <div class="spacer"></div>
+
+    {% if session.get('user_id') %}
+      <a href="{{ url_for('account_bp.account') }}" class="{{ 'active' if request.endpoint and request.endpoint.startswith('account_bp.account') else '' }}">Account</a>
+      <a href="{{ url_for('account_bp.game_page') }}" class="{{ 'active' if request.endpoint=='account_bp.game_page' else '' }}">Game Token</a>
+      <form id="logout-form" action="{{ url_for('auth_bp.api_logout') }}" method="post" class="nav-logout">
+        <button type="submit" class="nav-btn">Logout</button>
+      </form>
+    {% endif %}
+  </nav>
+
+  <div class="container">
+    {% include "_flash.html" %}
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>
